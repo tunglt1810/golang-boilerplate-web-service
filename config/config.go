@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/inhies/go-bytesize"
@@ -12,6 +13,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"goland-boilerplate-web-service/database/postgresql"
 	"goland-boilerplate-web-service/httpclient"
 	"goland-boilerplate-web-service/pkg/crypto/hmac"
 )
@@ -24,7 +26,7 @@ type Schema struct {
 
 	Server Server `mapstructure:"server"`
 
-	Database   Database                        `mapstructure:"postgres"`
+	Database   postgresql.Database             `mapstructure:"postgres"`
 	Sentry     Sentry                          `mapstructure:"sentry"`
 	AuthServer httpclient.InternalClientConfig `mapstructure:"auth_server"`
 
@@ -38,38 +40,11 @@ type Server struct {
 	Metrics int `mapstructure:"metrics"`
 }
 
-type Database struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Name     string `mapstructure:"database"`
-	Schema   string `mapstructure:"schema"`
-	User     string `mapstructure:"user"`
-	Password string `mapstructure:"password"`
-	SSLMode  string `mapstructure:"sslmode"`
-
-	MaxIdleConnection    int           `mapstructure:"max_idle_conns"`
-	MaxActiveConnection  int           `mapstructure:"max_active_conns"`
-	MaxConnectionTimeout time.Duration `mapstructure:"max_conn_timeout"`
-
-	SQLDebugger struct {
-		ShowSQLStatement bool `mapstructure:"show_sql_statement"`
-	} `mapstructure:"sql_debugger"`
-
-	TLS             *TLSConfig `mapstructure:"tls"`
-	MinimumPoolSize int        `mapstructure:"minimum_pool_size"`
-}
-
 type Sentry struct {
 	DSN              string  `mapstructure:"dsn"`
 	ENV              string  `mapstructure:"env"`
 	Debug            bool    `mapstructure:"debug"`
 	TracesSampleRate float64 `mapstructure:"traces_sample_rate"`
-}
-
-type TLSConfig struct {
-	ClientCert []byte `mapstructure:"client_cert"`
-	ClientKey  []byte `mapstructure:"client_key"`
-	CACert     []byte `mapstructure:"ca_cert"`
 }
 
 type Logging struct {
@@ -78,7 +53,7 @@ type Logging struct {
 
 var (
 	Config      Schema
-	callerCache = make(map[string]string)
+	callerCache sync.Map
 )
 
 // StringToByteSizeHookFunc returns a DecodeHookFunc that converts
@@ -133,8 +108,8 @@ func Init() {
 
 	// setup logging
 	zerolog.CallerMarshalFunc = func(pc uintptr, file string, line int) string {
-		if caller, ok := callerCache[file]; ok {
-			return caller
+		if caller, ok := callerCache.Load(file); ok {
+			return caller.(string)
 		}
 
 		short := file
@@ -145,11 +120,12 @@ func Init() {
 			}
 		}
 		caller := short + ":" + strconv.Itoa(line)
-		callerCache[file] = caller
+		callerCache.Store(file, caller)
 		return caller
 	}
 	loggingLevel, _ := zerolog.ParseLevel(Config.Logging.Level)
 	zerolog.SetGlobalLevel(loggingLevel)
+	zerolog.TimeFieldFormat = time.RFC3339Nano
 
 	log.Debug().Caller().Msgf("%+v", Config)
 }
