@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/labstack/echo/v4"
 	"goland-boilerplate-web-service/config"
+
+	"github.com/labstack/echo/v4"
 )
 
 func SetupRoutes(e *echo.Echo, cfg *config.Schema) {

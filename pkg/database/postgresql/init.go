@@ -59,15 +59,12 @@ func NewClient(cfg *Database) (*gorm.DB, error) {
 
 	db, err := client.DB()
 	if err != nil {
+		log.Err(err).Caller().Msgf("Cannot connect to PostgresSQL %s", cfg.Host)
 		return nil, err
 	}
 	db.SetMaxIdleConns(cfg.MaxIdleConnection)
 	db.SetMaxOpenConns(cfg.MaxActiveConnection)
 	db.SetConnMaxIdleTime(cfg.MaxConnectionTimeout)
-	if err != nil {
-		log.Err(err).Caller().Msgf("Cannot connect to PostgresSQL %s", cfg.Host)
-		return nil, err
-	}
 
 	log.Debug().Caller().Msgf("show sql %v", cfg.SQLDebugger.ShowSQLStatement)
 	if cfg.SQLDebugger.ShowSQLStatement {

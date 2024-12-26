@@ -29,7 +29,7 @@ var (
 
 // Common HTTP Errors used in services.
 //
-//nolint:gomnd
+//nolint:mnd
 var (
 	// ========================================================================
 	// Client errors

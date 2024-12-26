@@ -56,7 +56,7 @@ func (h *HMAC) ValidateSignature(signatureStr, dateStr string, params map[string
 		signingString += fmt.Sprintf("%s:%s\n", k, params[k])
 	}
 
-	if len(signingString) > 0 {
+	if signingString != "" {
 		signingString = signingString[:len(signingString)-1]
 	}
 

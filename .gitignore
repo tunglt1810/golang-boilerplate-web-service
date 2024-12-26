@@ -2,7 +2,7 @@
 .DS_Store
 
 # Dependencies
-node_modules/
+vendor/
 
 # Build directories
 dist/
@@ -14,16 +14,9 @@ tmp/
 # To maintain directory structure
 !.keep
 
-packages/document-parser/credentials/access_token.json
-
-# Error files
-yarn-error.log
-
 # Env
 .env
-fcm-auth.json
-.npmrc
 
-vendor/
 .idea
 .vscode
+*.bin

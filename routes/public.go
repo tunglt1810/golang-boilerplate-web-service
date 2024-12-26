@@ -3,8 +3,9 @@ package routes
 import (
 	"net/http"
 
-	"github.com/labstack/echo/v4"
 	"goland-boilerplate-web-service/config"
+
+	"github.com/labstack/echo/v4"
 )
 
 type APIVersion struct {

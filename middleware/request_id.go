@@ -21,7 +21,7 @@ var (
 )
 
 func generator() string {
-	return random.String(32) //nolint:gomnd
+	return random.String(32) //nolint:mnd
 }
 
 // RequestID returns a X-Request-ID middleware.

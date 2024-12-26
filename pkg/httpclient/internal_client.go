@@ -8,9 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rs/zerolog/log"
 	"goland-boilerplate-web-service/pkg/crypto/hmac"
 	"goland-boilerplate-web-service/pkg/errors"
+
+	"github.com/rs/zerolog/log"
 )
 
 type InternalClientConfig struct {
@@ -19,7 +20,6 @@ type InternalClientConfig struct {
 	AccessKey string        `mapstructure:"access_key"`
 	Timeout   time.Duration `mapstructure:"timeout"`
 }
-
 type InternalClient struct {
 	client *http.Client
 	cfg    *InternalClientConfig
@@ -56,9 +56,9 @@ func (p InternalClient) doRequestWithHMacAuth(req *http.Request, any interface{}
 
 	if res.StatusCode != http.StatusOK {
 		errorBody := errors.HTTPError{}
-		err := json.Unmarshal(body, &errorBody)
-		if err != nil {
-			return err
+		err1 := json.Unmarshal(body, &errorBody)
+		if err1 != nil {
+			return err1
 		}
 		errorBody.HTTPStatus = res.StatusCode
 		return &errorBody

@@ -8,14 +8,15 @@ import (
 	"sync"
 	"time"
 
+	"goland-boilerplate-web-service/pkg/crypto/hmac"
+	"goland-boilerplate-web-service/pkg/database/postgresql"
+	"goland-boilerplate-web-service/pkg/httpclient"
+
 	"github.com/inhies/go-bytesize"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"goland-boilerplate-web-service/database/postgresql"
-	"goland-boilerplate-web-service/httpclient"
-	"goland-boilerplate-web-service/pkg/crypto/hmac"
 )
 
 type Schema struct {

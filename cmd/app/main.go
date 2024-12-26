@@ -7,16 +7,17 @@ import (
 	"os/signal"
 	"time"
 
+	"goland-boilerplate-web-service/config"
+	inMiddleware "goland-boilerplate-web-service/middleware"
+	"goland-boilerplate-web-service/pkg/validation"
+	"goland-boilerplate-web-service/routes"
+
 	"github.com/getsentry/sentry-go"
 	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog/log"
-	"goland-boilerplate-web-service/config"
-	inMiddleware "goland-boilerplate-web-service/middleware"
-	"goland-boilerplate-web-service/pkg/validation"
-	"goland-boilerplate-web-service/routes"
 )
 
 func main() {
@@ -59,7 +60,7 @@ func main() {
 	// Register routes
 	routes.SetupRoutes(e, &config.Config)
 
-	eMetrics, prom := setupMertrics(&config.Config.Server)
+	eMetrics, prom := setupMetrics(&config.Config.Server)
 	e.Use(prom.HandlerFunc)
 
 	// Start webserver with graceful shutdown
@@ -83,7 +84,7 @@ func main() {
 	}
 }
 
-func setupMertrics(cfg *config.Server) (*echo.Echo, *prometheus.Prometheus) {
+func setupMetrics(cfg *config.Server) (*echo.Echo, *prometheus.Prometheus) {
 	e := echo.New()
 	e.HideBanner = true
 	p := prometheus.NewPrometheus("echo", nil)

@@ -6,10 +6,11 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/labstack/echo/v4"
 	"goland-boilerplate-web-service/config"
 	"goland-boilerplate-web-service/pkg/crypto/hmac"
 	_errs "goland-boilerplate-web-service/pkg/errors"
+
+	"github.com/labstack/echo/v4"
 )
 
 const (

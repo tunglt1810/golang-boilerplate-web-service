@@ -46,7 +46,7 @@ func Sign(params map[string]string, secretKey []byte) (encodedSignature, headerS
 	if signingString == "" {
 		return "", "", errors.New("signing string is empty")
 	}
-	if len(signingString) > 0 {
+	if signingString != "" {
 		signingString = signingString[:len(signingString)-1]
 	}
 	signature, err := SHA256(secretKey, []byte(signingString))

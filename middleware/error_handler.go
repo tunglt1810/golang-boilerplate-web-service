@@ -4,12 +4,13 @@ import (
 	_errors "errors"
 	"net/http"
 
+	"goland-boilerplate-web-service/pkg/errors"
+	"goland-boilerplate-web-service/pkg/validation"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/jackc/pgconn"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"goland-boilerplate-web-service/pkg/errors"
-	"goland-boilerplate-web-service/pkg/validation"
 )
 
 func GlobalErrorHandler(err error, c echo.Context) {

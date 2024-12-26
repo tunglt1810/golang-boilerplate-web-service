@@ -1,7 +1,7 @@
 #syntax=docker/dockerfile:experimental
 #-----------------------------------------------
 # Builder stage.
-FROM golang:1.19-buster AS builder
+FROM golang:1.23-bookworm AS builder
 ENV GO111MODULE=on
 
 # ARG SSH_PRIVATE_KEY
@@ -23,7 +23,7 @@ RUN --mount=type=ssh,mode=741,uid=100,gid=102 cd cmd/app && CGO_ENABLED=0 GOOS=l
 FROM debian:buster AS runner
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates
+	&& apt-get install -y --no-install-recommends ca-certificates
 
 RUN update-ca-certificates
 COPY --from=builder /src/cmd/app/app /app/
